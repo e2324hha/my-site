@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIFF App</title>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+</head>
+<body>
+    <h1>LIFFアプリへようこそ</h1>
+    <button id="loginButton">ログイン</button>
+    <div id="profile"></div>
+
+    <script>
+        liff.init({ liffId: 'YOUR_LIFF_ID' })
+            .then(() => {
+                if (!liff.isLoggedIn()) {
+                    liff.login();
+                } else {
+                    liff.getProfile().then(profile => {
+                        document.getElementById('profile').innerHTML = `こんにちは、${profile.displayName}さん！`;
+                    });
+                }
+            })
+            .catch(err => console.error(err));
+    </script>
+</body>
+</html>
