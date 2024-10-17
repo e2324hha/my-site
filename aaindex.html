@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>登録画面</title>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 1em;
+        }
+        .dynamic-field {
+            margin-bottom: 15px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>見守り情報の設定</h1>
+    <p>⑴見守り先を選んでください</p>
+    <select id="watching-person" name="example">
+        <option value="選択">選択</option>
+        <option value="たろう">たろう</option>
+        <option value="はなこ">はなこ</option>
+    </select>
+
+    <p>⑵一日に何回位置情報を送信しますか？</p>
+    <select id="send-count" name="sendCount">
+        <option value="1">1回</option>
+        <option value="2">2回</option>
+        <option value="3">3回</option>
+    </select>
+
+    <p>⑶位置情報を送信する時間を選んでください</p>
+    <div id="dynamic-fields"></div>
+
+    <button type="submit">登録</button>
+
+    <script>
+        document.getElementById('send-count').addEventListener('change', function() {
+            const selectedValue = this.value;
+            const dynamicFieldsContainer = document.getElementById('dynamic-fields');
+            dynamicFieldsContainer.innerHTML = '';
+
+            const timeOptions = [];
+            for (let hour = 0; hour < 24; hour++) {
+                for (let minute = 0; minute < 60; minute += 30) {
+                    const formattedTime = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+                    timeOptions.push(formattedTime);
+                }
+            }
+
+            for (let i = 0; i < selectedValue; i++) {
+                const newField = document.createElement('div');
+                newField.classList.add('dynamic-field');
+                newField.innerHTML = `
+                    <label for="time-${i + 1}">通知する時刻（${i + 1}回目）:</label>
+                    <select id="time-${i + 1}" name="予定の時刻">
+                        ${timeOptions.map(time => `<option value="${time}">${time}</option>`).join('')}
+                    </select>
+                `;
+                dynamicFieldsContainer.appendChild(newField);
+            }
+        });
+    </script>
+</body>
+</html>
